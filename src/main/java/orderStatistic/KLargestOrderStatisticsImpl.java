@@ -29,9 +29,26 @@ public class KLargestOrderStatisticsImpl<T extends Comparable<T>> implements KLa
 
 	@Override
 	public T[] getKLargest(T[] array, int k) {
-		// TODO Implement your code here
-		throw new UnsupportedOperationException("Not implemented yet!");
-		//este metodo deve obrigatoriamente usar o orderStatistics abaixo.
+
+		if (k > array.length || array.length == 0) {
+			return (T[]) new Comparable[0];
+		}
+
+		T[] result = (T[]) new Comparable[k];
+
+		int startingPoint = (array.length - k) + 1;
+
+		int j = 0;
+		for (int i = startingPoint; i <= array.length; i++) {
+
+			if (j == k) break;
+
+			result[j] = orderStatistics(array, i);
+			j++;
+
+		}
+
+		return result;
 	}
 
 	/**
@@ -46,7 +63,52 @@ public class KLargestOrderStatisticsImpl<T extends Comparable<T>> implements KLa
 	 * @return
 	 */
 	public T orderStatistics(T[] array, int k){
-		// TODO Implement your code here
-		throw new UnsupportedOperationException("Not implemented yet!");		
+		
+		T result = selectMin(array);
+
+		if (k > 1) {
+			for (int j = 2; j <= k; j++) {
+				result = selectGreater(array, result);
+			}
+		}
+
+		return result;
 	}
+
+	public T selectMin(T[] array) {
+		T min = array[0];
+		
+		for (int j = 1; j < array.length; j++) {
+			if (array[j].compareTo(min) < 0) {
+				min = array[j];
+			}
+		}
+
+		return min;
+	}
+
+	public T selectGreater(T[] array, T previous) {
+
+		T candidate = null;
+
+		for (int j = 0; j < array.length; j++) {
+			if (array[j].compareTo(previous) > 0) {
+				if (candidate == null) {
+
+					candidate = array[j];
+
+				} else {
+					if (array[j].compareTo(candidate) < 0) {
+						candidate = array[j];
+					}
+				}
+			}
+		}
+
+		
+
+		return candidate;
+	}
+
+	
 }
